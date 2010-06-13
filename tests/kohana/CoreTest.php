@@ -68,8 +68,8 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 	 * @test
 	 * @dataProvider providerFindFile
 	 * @covers Kohana::find_file
-	 * @param boolean $value  Input for Kohana::auto_load
-	 * @param boolean $result Output for Kohana::auto_load
+	 * @param boolean $value  Input for Kohana::find_file
+	 * @param boolean $result Output for Kohana::find_file
 	 */
 	function testFindFile($folder, $class, $result)
 	{
@@ -177,8 +177,9 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 	 * @test
 	 * @dataProvider providerCache
 	 * @covers Kohana::cache
-	 * @param boolean $value  Input for Kohana::sanitize
-	 * @param boolean $result Output for Kohana::sanitize
+	 * @param boolean $key      Key to cache/get for Kohana::cache
+	 * @param boolean $value    Output from Kohana::cache
+	 * @param boolean $lifetime Lifetime for Kohana::cache
 	 */
 	function testCache($key, $value, $lifetime)
 	{
@@ -217,8 +218,9 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 	 * @test
 	 * @dataProvider providerMessage
 	 * @covers Kohana::message
-	 * @param boolean $value  Input for Kohana::sanitize
-	 * @param boolean $result Output for Kohana::sanitize
+	 * @param boolean $file     File to look in for Kohana::message
+	 * @param boolean $key      Key for Kohana::message
+	 * @param boolean $expected Output for Kohana::message
 	 */
 	function testMessage($file, $key, $expected)
 	{
@@ -233,8 +235,7 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 	function providerErrorHandler()
 	{
 		return array(
-			// $value, $result
-			array('Foobar', 1, 'foobar.php', 100), // This doesn't trigger an error?
+			array(1, 'Foobar', 'foobar.php', __LINE__),
 		);
 	}
 
@@ -244,8 +245,10 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 	 * @test
 	 * @dataProvider providerErrorHandler
 	 * @covers Kohana::error_handler
-	 * @param boolean $value  Input for Kohana::sanitize
-	 * @param boolean $result Output for Kohana::sanitize
+	 * @param boolean $code  Input for Kohana::sanitize
+	 * @param boolean $error  Input for Kohana::sanitize
+	 * @param boolean $file  Input for Kohana::sanitize
+	 * @param boolean $line Output for Kohana::sanitize
 	 */
 	function testErrorHandler($code, $error, $file, $line)
 	{
@@ -273,7 +276,7 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 		return array(
 			// $exception_type, $message, $is_cli, $expected
 			array('Kohana_Exception', 'hello, world!', TRUE, TRUE),
-			array('ErrorException', 'hello, world!', TRUE, TRUE), // This doesn't work
+			array('ErrorException', 'hello, world!', TRUE, TRUE),
 			array('Kohana_Exception', 'hello, world!', FALSE, TRUE),
 		);
 	}
@@ -284,8 +287,10 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 	 * @test
 	 * @dataProvider providerExceptionHandler
 	 * @covers Kohana::exception_handler
-	 * @param boolean $value  Input for Kohana::sanitize
-	 * @param boolean $result Output for Kohana::sanitize
+	 * @param boolean $exception_type Exception type to throw
+	 * @param boolean $message        Message to pass to exception
+	 * @param boolean $is_cli         Use cli mode?
+	 * @param boolean $expected       Output for Kohana::exception_handler
 	 */
 	function testExceptionHandler($exception_type, $message, $is_cli, $expected)
 	{
@@ -323,8 +328,8 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 	 * @test
 	 * @dataProvider providerDebug
 	 * @covers Kohana::debug
-	 * @param boolean $value  Input for Kohana::sanitize
-	 * @param boolean $result Output for Kohana::sanitize
+	 * @param boolean $thing    The thing to debug
+	 * @param boolean $expected Output for Kohana::debug
 	 */
 	function testdebug($thing, $expected)
 	{
@@ -350,8 +355,8 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 	 * @test
 	 * @dataProvider providerDebugPath
 	 * @covers Kohana::debug_path
-	 * @param boolean $value  Input for Kohana::sanitize
-	 * @param boolean $result Output for Kohana::sanitize
+	 * @param boolean $path     Input for Kohana::debug_path
+	 * @param boolean $expected Output for Kohana::debug_path
 	 */
 	function testDebugPath($path, $expected)
 	{
@@ -379,8 +384,8 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 	 * @test
 	 * @dataProvider providerModules
 	 * @covers Kohana::modules
-	 * @param boolean $value  Input for Kohana::sanitize
-	 * @param boolean $result Output for Kohana::sanitize
+	 * @param boolean $source   Input for Kohana::modules
+	 * @param boolean $expected Output for Kohana::modules
 	 */
 	function testModules($source, $expected)
 	{
@@ -405,7 +410,7 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 	 * @test
 	 * @dataProvider providerIncludePaths
 	 * @covers Kohana::include_paths
-	 * @param boolean $value  Input for Kohana::sanitize
+	 * @param boolean $expected  Input for Kohana::include_paths
 	 */
 	function testIncludePaths($expected)
 	{

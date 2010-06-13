@@ -43,7 +43,7 @@ class Kohana_FileTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Provides test data for testSanitize()
+	 * Provides test data for testSplitJoin()
 	 * 
 	 * @return array
 	 */
@@ -60,8 +60,9 @@ class Kohana_FileTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @test
 	 * @dataProvider providerSplitJoin
-	 * @param boolean $input  Input for File::mime
-	 * @param boolean $expected Output for File::mime
+	 * @param boolean $input    Input for File::split
+	 * @param boolean $peices   Input for File::split
+	 * @param boolean $expected Output for File::splut
 	 */
 	function testSplitJoin($input, $peices, $expected)
 	{
