@@ -39,7 +39,7 @@ class Kohana_FileTest extends PHPUnit_Framework_TestCase
 	 */
 	function testMime($input)
 	{
-		$this->assertSame(1, preg_match('/^(?:application|audio|image|message|multipart|text|video)\/[a-z.+0-9-]+/i', File::mime($input)));
+		$this->assertSame(1, preg_match('/^(?:application|audio|image|message|multipart|text|video)\/[a-z.+0-9-]+$/i', File::mime($input)));
 	}
 
 	/**
