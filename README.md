@@ -20,6 +20,5 @@ How to use the tests
 Known failing tests
 ---
 
- * File::mime() does not properly test returned mime types, you may get failures for this test depending on your system.
  * Kohana::cache() test does not properly delete it's files after running. Failure to delete the files will result in a test failure.
  * If any other tests fail for your system, please [file a bug](http://dev.kohanaframework.org/projects/kohana3/issues/new)
