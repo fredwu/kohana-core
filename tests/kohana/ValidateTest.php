@@ -781,5 +781,55 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 		);
 	}
 
-	
+	public function provider_check()
+	{
+		// $first_array, $second_array, $rules, $first_expected, $second_expected
+		return array(
+			array(
+				array('foo' => 'bar'),
+				array('foo' => 'not_empty'),
+				array('foo' => array($this, 'unit_test_callback')),
+				TRUE,
+			),
+			array(
+				array('unit' => 'test'),
+				array('foo' => 'not_empty'),
+				array(),
+				FALSE,
+			),
+		);
+	}
+
+	/**
+	 * Tests Validate::check()
+	 *
+	 * @test
+	 * @covers Validate::check
+	 * @covers Validate::callbacks
+	 * @covers Validate::callback
+	 * @covers Validate::rule
+	 * @covers Validate::rules
+	 * @dataProvider provider_check
+	 * @param string  $url       The url to test
+	 * @param boolean $expected  Is it valid?
+	 */
+	public function test_check($array, $rules, $callbacks, $expected)
+	{
+		$validate = Validate::factory($array);
+		foreach ($rules as $field => $rule)
+			$validate->rule($field, $rule);
+		foreach ($callbacks as $field => $callback)
+			$validate->callback($field, $callback);
+		$this->assertSame($expected, $validate->check());
+
+		$validate = Validate::factory($array);
+		foreach ($rules as $field => $rule)
+			$validate->rules($field, array($rule => NULL));
+		$this->assertSame($expected, $validate->check());
+	}
+
+	public function unit_test_callback(Validate $array, $field)
+	{
+		return;
+	}
 }
