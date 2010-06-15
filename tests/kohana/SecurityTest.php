@@ -84,6 +84,7 @@ Class Kohana_SecurityTest extends Kohana_Unittest_TestCase
 		Security::$token_name = 'token_'.$iteration;
 		$this->assertSame(TRUE, $input);
 		$this->assertSame($expected, Security::token(FALSE));
+		Session::instance()->delete(Security::$token_name);
 	}
 
 	/**
