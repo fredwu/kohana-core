@@ -14,6 +14,57 @@
 class Kohana_RouteTest extends Kohana_Unittest_TestCase
 {
 	/**
+	 * Remove all caches
+	 */
+	function setUp()
+	{
+		parent::setUp();
+
+		$this->clean_cache_dir();
+	}
+
+	/** 
+	 * Removes cache files created during tests
+	 */
+	function tearDown()
+	{
+		parent::tearDown();
+
+		$this->clean_cache_dir();
+	}
+
+	/**
+	 * Removes all kohana related cache files in the cache directory
+	 */
+	function clean_cache_dir()
+	{
+		$cache_dir = opendir(Kohana::$cache_dir);
+
+		while($dir = readdir($cache_dir))
+		{
+			// Cache files are split into directories based on first two characters of hash
+			if($dir[0] !== '.' AND strlen($dir) === 2)
+			{
+				$cache = opendir(Kohana::$cache_dir.'/'.$dir);
+
+				while($file = readdir($cache))
+				{
+					if($file[0] !== '.')
+					{
+						unlink(Kohana::$cache_dir.'/'.$dir.'/'.$file);
+					}
+				}
+
+				closedir($cache);
+
+				rmdir(Kohana::$cache_dir.'/'.$dir);
+			}
+		}
+
+		closedir($cache_dir);
+	}
+
+	/**
 	 * Route::matches() should return false if the route doesn't match against a uri
 	 *
 	 * @test
@@ -128,7 +179,7 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
 		);
 
 		$route = Route::get('foobar');
-		$this->assertSame('foobar', Route::name($route)); // Why doesn't this give code coverage to name() ?
+		$this->assertSame('foobar', Route::name($route));
 		$this->assertSame(NULL, Route::cache(TRUE));
 	}
 }
