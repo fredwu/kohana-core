@@ -14,11 +14,8 @@ How to use the tests
 ---
 
  * Make sure you have the [unittest](http://github.com/kohana/unittest) module, and put it one level up from this directory, and name it unittest (or you can modify the test_bootstrap.php file to point to it).
- * This test suite runs a cache test, and doesn't properly delete it's cache
- * Run `rm -rf cache/* && phpunit`
 
 Known failing tests
 ---
 
- * Kohana::cache() test does not properly delete it's files after running. Failure to delete the files will result in a test failure.
  * If any other tests fail for your system, please [file a bug](http://dev.kohanaframework.org/projects/kohana3/issues/new)
