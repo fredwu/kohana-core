@@ -33,9 +33,9 @@ class Kohana_FormTest extends PHPUnit_Framework_TestCase
 		return array(
 			// $value, $result
 			#array(NULL, NULL, '<form action="/" method="post" accept-charset="utf-8">'), // Fails because of Request::$current
-			array('foo', NULL, '<form action="/foo" method="post" accept-charset="utf-8">'),
-			array('', NULL, '<form action="/" method="post" accept-charset="utf-8">'),
-			array('foo', array('method' => 'get'), '<form action="/foo" method="get" accept-charset="utf-8">'),
+			array('foo', NULL),
+			array('', NULL),
+			array('foo', array('method' => 'get')),
 		);
 	}
 
@@ -47,9 +47,22 @@ class Kohana_FormTest extends PHPUnit_Framework_TestCase
 	 * @param boolean $input  Input for File::mime
 	 * @param boolean $expected Output for File::mime
 	 */
-	function testOpen($action, $attributes, $expected)
+	function testOpen($action, $attributes)
 	{
-		$this->assertSame($expected, Form::open($action, $attributes));
+		$tag = Form::open($action, $attributes);
+
+		$matcher = array(
+			'tag' => 'form',
+			'attributes' => array(
+				'method' => 'post',
+				'accept-charset' => 'utf-8',
+			),
+		);
+		
+		if($attributes !== NULL)
+			$matcher['attributes'] = $attributes + $matcher['attributes'];
+		
+		$this->assertTag($matcher, $tag);
 	}
 
 	/**
@@ -71,10 +84,10 @@ class Kohana_FormTest extends PHPUnit_Framework_TestCase
 	{
 		return array(
 			// $value, $result
-			array('foo', 'bar', NULL, 'input', '<input type="text" name="foo" value="bar" />'),
-			array('foo', NULL, NULL, 'input', '<input type="text" name="foo" />'),
-			array('foo', 'bar', NULL, 'hidden', '<input type="hidden" name="foo" value="bar" />'),
-			array('foo', 'bar', NULL, 'password', '<input type="password" name="foo" value="bar" />'),
+			array('input',    'foo', 'bar', NULL, 'input'),
+			array('input',    'foo',  NULL, NULL, 'input'),
+			array('hidden',   'foo', 'bar', NULL, 'hidden'),
+			array('password', 'foo', 'bar', NULL, 'password'),
 		);
 	}
 
@@ -86,9 +99,28 @@ class Kohana_FormTest extends PHPUnit_Framework_TestCase
 	 * @param boolean $input  Input for File::mime
 	 * @param boolean $expected Output for File::mime
 	 */
-	function testInput($name, $value, $attributes, $type, $expected)
+	function testInput($type, $name, $value, $attributes)
 	{
-		$this->assertSame($expected, Form::$type($name, $value, $attributes));
+		$matcher = array(
+			'tag' => 'input',
+			'attributes' => array('name' => $name, 'type' => $type)
+		);
+
+		// Form::input creates a text input
+		if($type === 'input')
+			$matcher['attributes']['type'] = 'text';
+
+		// NULL just means no value
+		if($value !== NULL)
+			$matcher['attributes']['value'] = $value;
+
+		// Add on any attributes
+		if(is_array($attributes))
+			$matcher['attributes'] = $attributes + $matcher['attributes'];
+
+		$tag = Form::$type($name, $value, $attributes);
+
+		$this->assertTag($matcher, $tag, $tag);
 	}
 
 	/**
@@ -122,17 +154,17 @@ class Kohana_FormTest extends PHPUnit_Framework_TestCase
 	 * 
 	 * @return array
 	 */
-	function providerCheck()
+	function provider_check()
 	{
 		return array(
 			// $value, $result
-			array('foo', NULL, FALSE, NULL, 'checkbox', '<input type="checkbox" name="foo" />'),
-			array('foo', NULL, TRUE, NULL, 'checkbox', '<input type="checkbox" name="foo" checked="checked" />'),
-			array('foo', 'bar', TRUE, NULL, 'checkbox', '<input type="checkbox" name="foo" value="bar" checked="checked" />'),
+			array('checkbox', 'foo', NULL, FALSE, NULL),
+			array('checkbox', 'foo', NULL, TRUE, NULL),
+			array('checkbox', 'foo', 'bar', TRUE, NULL),
 			
-			array('foo', NULL, FALSE, NULL, 'radio', '<input type="radio" name="foo" />'),
-			array('foo', NULL, TRUE, NULL, 'radio', '<input type="radio" name="foo" checked="checked" />'),
-			array('foo', 'bar', TRUE, NULL, 'radio', '<input type="radio" name="foo" value="bar" checked="checked" />'),
+			array('radio', 'foo', NULL, FALSE, NULL),
+			array('radio', 'foo', NULL, TRUE, NULL),
+			array('radio', 'foo', 'bar', TRUE, NULL),
 		);
 	}
 
@@ -140,13 +172,25 @@ class Kohana_FormTest extends PHPUnit_Framework_TestCase
 	 * Tests Form::check()
 	 *
 	 * @test
-	 * @dataProvider providerCheck
+	 * @dataProvider provider_check
 	 * @param boolean $input  Input for File::mime
 	 * @param boolean $expected Output for File::mime
 	 */
-	function testCheck($name, $value, $checked, $attributes, $type, $expected)
+	function test_check($type, $name, $value, $checked, $attributes)
 	{
-		$this->assertSame($expected, Form::$type($name, $value, $checked, $attributes));
+		$matcher = array('tag' => 'input', 'attributes' => array('name' => $name, 'type' => $type));
+
+		if($value !== NULL)
+			$matcher['attributes']['value'] = $value;
+
+		if(is_array($attributes))
+			$matcher['attributes'] = $attributes + $matcher['attributes'];
+
+		if($checked === TRUE)
+			$matcher['attributes']['checked'] = 'checked';
+
+		$tag = Form::$type($name, $value, $checked, $attributes);
+		$this->assertTag($matcher, $tag, $tag);
 	}
 
 	/**
@@ -158,11 +202,11 @@ class Kohana_FormTest extends PHPUnit_Framework_TestCase
 	{
 		return array(
 			// $value, $result
-			array('foo', 'bar', NULL, 'textarea', '<textarea name="foo" cols="50" rows="10">bar</textarea>'),
-			array('foo', 'bar', array('rows' => 20, 'cols' => 20), 'textarea', '<textarea name="foo" cols="20" rows="20">bar</textarea>'),
-			array('foo', 'bar', NULL, 'button', '<button name="foo">bar</button>'),
-			array('foo', 'bar', NULL, 'label', '<label for="foo">bar</label>'),
-			array('foo', NULL, NULL, 'label', '<label for="foo">Foo</label>'),
+			array('textarea', 'foo', 'bar', NULL),
+			array('textarea', 'foo', 'bar', array('rows' => 20, 'cols' => 20)),
+			array('button', 'foo', 'bar', NULL),
+			array('label', 'foo', 'bar', NULL),
+			array('label', 'foo', NULL, NULL),
 		);
 	}
 
@@ -174,10 +218,28 @@ class Kohana_FormTest extends PHPUnit_Framework_TestCase
 	 * @param boolean $input  Input for File::mime
 	 * @param boolean $expected Output for File::mime
 	 */
-	function testText($name, $body, $attributes, $type, $expected)
+	function testText($type, $name, $body, $attributes)
 	{
-		$this->assertSame($expected, Form::$type($name, $body, $attributes));
+		$matcher = array(
+			'tag' => $type,
+			'attributes' => array(),
+			'content' => $body,
+		);
+
+		if($type !== 'label')
+			$matcher['attributes'] = array('name' => $name);
+		else
+			$matcher['attributes'] = array('for' => $name);
+
+
+		if(is_array($attributes))
+			$matcher['attributes'] = $attributes + $matcher['attributes'];
+
+		$tag = Form::$type($name, $body, $attributes);
+
+		$this->assertTag($matcher, $tag, $tag);
 	}
+
 
 	/**
 	 * Provides test data for testSelect()
@@ -206,6 +268,7 @@ class Kohana_FormTest extends PHPUnit_Framework_TestCase
 	 */
 	function testSelect($name, $options, $selected, $expected)
 	{
+		// Much more efficient just to assertSame() rather than assertTag() on each element
 		$this->assertSame($expected, Form::select($name, $options, $selected));
 	}
 
@@ -232,7 +295,12 @@ class Kohana_FormTest extends PHPUnit_Framework_TestCase
 	 */
 	function testSubmit($name, $value, $expected)
 	{
-		$this->assertSame($expected, Form::submit($name, $value));
+		$matcher = array(
+			'tag' => 'input',
+			'attributes' => array('name' => $name, 'type' => 'submit', 'value' => $value)
+		);
+			
+		$this->assertTag($matcher, Form::submit($name, $value));
 	}
 
 
