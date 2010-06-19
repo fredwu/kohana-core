@@ -15,6 +15,15 @@
 class Kohana_FormTest extends PHPUnit_Framework_TestCase
 {
 	/**
+	 * Defaults for this test
+	 * @var array
+	 */
+	protected $environmentDefault = array(
+		'Kohana::$base_url' => '/',
+		'HTTP_HOST' => 'kohanaframework.org',
+	);
+
+	/**
 	 * Provides test data for testOpen()
 	 * 
 	 * @return array
