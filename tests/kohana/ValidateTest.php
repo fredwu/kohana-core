@@ -787,15 +787,17 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 		return array(
 			array(
 				array('foo' => 'bar'),
-				array('foo' => 'not_empty'),
+				array('foo' => array('not_empty', NULL)),
 				array('foo' => array($this, 'unit_test_callback')),
 				TRUE,
+				array(),
 			),
 			array(
 				array('unit' => 'test'),
-				array('foo' => 'not_empty'),
+				array('foo' => array('not_empty', NULL), 'unit' => array('min_length', 6)),
 				array(),
 				FALSE,
+				array('foo' => 'foo must not be empty', 'unit' => 'unit must be at least 6 characters long'),
 			),
 		);
 	}
@@ -809,22 +811,28 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 	 * @covers Validate::callback
 	 * @covers Validate::rule
 	 * @covers Validate::rules
+	 * @covers Validate::errors
+	 * @covers Validate::error
 	 * @dataProvider provider_check
 	 * @param string  $url       The url to test
 	 * @param boolean $expected  Is it valid?
 	 */
-	public function test_check($array, $rules, $callbacks, $expected)
+	public function test_check($array, $rules, $callbacks, $expected, $expected_errors)
 	{
 		$validate = Validate::factory($array);
 		foreach ($rules as $field => $rule)
-			$validate->rule($field, $rule);
+			$validate->rule($field, $rule[0], array($rule[1]));
 		foreach ($callbacks as $field => $callback)
 			$validate->callback($field, $callback);
-		$this->assertSame($expected, $validate->check());
+
+		$status = $validate->check();
+		$errors = $validate->errors(TRUE);
+		$this->assertSame($expected, $status);
+		$this->assertSame($expected_errors, $errors);
 
 		$validate = Validate::factory($array);
 		foreach ($rules as $field => $rule)
-			$validate->rules($field, array($rule => NULL));
+			$validate->rules($field, array($rule[0] => array($rule[1])));
 		$this->assertSame($expected, $validate->check());
 	}
 
@@ -833,7 +841,7 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 		return;
 	}
 
-	public function provider_errors()
+	/*public function provider_errors()
 	{
 		// [data, rules, expected], ...
 		return array(
@@ -848,7 +856,7 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 				array('username must not be empty'),
 			),
 		);
-	}
+	}*/
 
 	/**
 	 * Tests Validate::errors()
@@ -859,7 +867,7 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 	 * @param string  $url       The url to test
 	 * @param boolean $expected  Is it valid?
 	 */
-	public function test_errors($array, $rules, $expected)
+	/*public function test_errors($array, $rules, $expected)
 	{
 		$validate = Validate::factory($array)
 			->rules($rules);
@@ -867,5 +875,5 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 		$validate->check();
 
 		$this->assertSame($expected, $validate->errors('validate', FALSE));
-	}
+	}*/
 }
