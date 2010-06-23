@@ -189,17 +189,11 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
 	 */
 	function provider_composing_url_from_route()
 	{
-	  Route::set('foobar', '(<controller>(/<action>(/<id>)))')
-      ->defaults(array(
-        'controller' => 'welcome',
-      )
-    );
-
-	  return array(
-	   array('/welcome'),
-	   array('/news/view/42', array('controller' => 'news', 'action' => 'view', 'id' => 42)),
-	   array('cli://kohanaframework.org/news', array('controller' => 'news'), true)
-	  );
+		return array(
+			array('/welcome'),
+			array('/news/view/42', array('controller' => 'news', 'action' => 'view', 'id' => 42)),
+			array('cli://kohanaframework.org/news', array('controller' => 'news'), true)
+		);
 	}
 
 	/**
@@ -215,7 +209,13 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
 	 */
 	function test_composing_url_from_route($expected, $params = NULL, $protocol = NULL)
 	{
-	  $this->setEnvironment(array('_SERVER' => array('HTTP_HOST' => 'kohanaframework.org')));
-	  $this->assertSame($expected, Route::url('foobar', $params, $protocol));
+		Route::set('foobar', '(<controller>(/<action>(/<id>)))')
+			->defaults(array(
+				'controller' => 'welcome',
+			)
+		);
+
+		$this->setEnvironment(array('_SERVER' => array('HTTP_HOST' => 'kohanaframework.org')));
+		$this->assertSame($expected, Route::url('foobar', $params, $protocol));
 	}
 }
