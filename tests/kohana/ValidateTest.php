@@ -760,6 +760,8 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 			array('http://google.com', TRUE),
 			array('http://localhost', TRUE),
 			array('ftp://my.server.com', TRUE),
+			array('rss+xml://rss.example.com', TRUE),
+			array('http://server.tld/get/info', TRUE),
 			array('http://ww£.gooogle.com', FALSE),
 			array('http://127.0.0.1', TRUE),
 			array('http://127.0.0.1.1', FALSE),
