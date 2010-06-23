@@ -144,7 +144,18 @@ class Kohana_Validate extends ArrayObject {
 	 */
 	public static function url($url)
 	{
-		return (bool) filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED);
+		// Regex taken from http://fightingforalostcause.net/misc/2006/compare-email-regex.php
+		// Added the scheme and path parts to test URLs
+
+		$scheme = '[a-z0-9+-.]+';
+		$host   = '(([a-z0-9]{1}[a-z0-9-]+[a-z0-9]{1}|[a-z])\.?)+([a-z]{2,6})?';
+		$ipaddr = '(\d{1,3}.){3}\d{1,3}';
+		$port   = '(\:\d{1,5})?';
+		$path   = '(/.+)?';
+
+		$regex  = "!^{$scheme}://({$host}|{$ipaddr}){$port}{$path}$!i";
+
+		return (bool) preg_match($regex, $url);
 	}
 
 	/**
@@ -978,19 +989,19 @@ class Kohana_Validate extends ArrayObject {
 			}
 
 			// Start the translation values list
-			$values = array(':field' => $label);
+			$values = array(
+				':field' => $label,
+				':value' => $this[$field],
+			);
+
+			if (is_array($values[':value']))
+			{
+				// All values must be strings
+				$values[':value'] = implode(', ', Arr::flatten($values[':value']));
+			}
 
 			if ($params)
 			{
-				// Value passed to the callback
-				$values[':value'] = array_shift($params);
-
-				if (is_array($values[':value']))
-				{
-					// All values must be strings
-					$values[':value'] = implode(', ', Arr::flatten($values[':value']));
-				}
-
 				foreach ($params as $key => $value)
 				{
 					if (is_array($value))
@@ -1015,11 +1026,6 @@ class Kohana_Validate extends ArrayObject {
 					$values[':param'.($key + 1)] = $value;
 				}
 			}
-			else
-			{
-				// No value is present
-				$values[':value'] = NULL;
-			}
 
 			if ($message = Kohana::message($file, "{$field}.{$error}"))
 			{
@@ -1043,7 +1049,7 @@ class Kohana_Validate extends ArrayObject {
 				$message = "{$file}.{$field}.{$error}";
 			}
 
-			if ($translate == TRUE)
+			if ($translate)
 			{
 				if (is_string($translate))
 				{
