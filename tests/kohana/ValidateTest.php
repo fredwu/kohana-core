@@ -841,7 +841,7 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 		return;
 	}
 
-	public function provider_errors()
+	/*public function provider_errors()
 	{
 		// [data, rules, expected], ...
 		return array(
@@ -856,7 +856,7 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 				array('username must not be empty'),
 			),
 		);
-	}
+	}*/
 
 	/**
 	 * Tests Validate::errors()
@@ -867,7 +867,7 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 	 * @param string  $url       The url to test
 	 * @param boolean $expected  Is it valid?
 	 */
-	public function test_errors($array, $rules, $expected)
+	/*public function test_errors($array, $rules, $expected)
 	{
 		$validate = Validate::factory($array)
 			->rules($rules);
@@ -875,5 +875,5 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 		$validate->check();
 
 		$this->assertSame($expected, $validate->errors('validate', FALSE));
-	}
+	}*/
 }
