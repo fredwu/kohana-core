@@ -23,7 +23,7 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
 		$this->clean_cache_dir();
 	}
 
-	/** 
+	/**
 	 * Removes cache files created during tests
 	 */
 	function tearDown()
@@ -79,14 +79,14 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
 	/**
 	 * Route::matches() should return an array of parameters when a match is made
 	 * An parameters that are not matched should not be present in the array of matches
-	 * 
+	 *
 	 * @test
 	 * @covers Route
 	 */
 	function test_matches_returns_array_of_parameters_on_successful_match()
 	{
 		$route = new Route('(<controller>(/<action>(/<id>)))');
-		
+
 		$matches = $route->matches('welcome/index');
 
 		$this->assertType('array', $matches);
@@ -123,7 +123,7 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
 
 	/**
 	 * This tests that routes with required parameters will not match uris without them present
-	 * 
+	 *
 	 * @test
 	 * @covers Route
 	 */
@@ -163,7 +163,7 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
 
 	/**
 	 * Tests route caching
-	 * 
+	 *
 	 * @todo remove the cached files. need to delete the cache before running the unit tests to get coverage
 	 *
 	 * @test
@@ -181,5 +181,42 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
 		$route = Route::get('foobar');
 		$this->assertSame('foobar', Route::name($route));
 		$this->assertSame(NULL, Route::cache(TRUE));
+	}
+
+	/**
+	 * Provides test data for test_composing_url_from_route()
+	 * @return array
+	 */
+	function provider_composing_url_from_route()
+	{
+	  Route::set('foobar', '(<controller>(/<action>(/<id>)))')
+      ->defaults(array(
+        'controller' => 'welcome',
+      )
+    );
+
+    $this->setEnvironment(array('_SERVER' => array('HTTP_HOST' => 'kohanaframework.org')));
+
+	  return array(
+	   array('/welcome'),
+	   array('/news/view/42', array('controller' => 'news', 'action' => 'view', 'id' => 42)),
+	   array('http://kohanaframework.org/news', array('controller' => 'news'), true)
+	  );
+	}
+
+	/**
+	 * Tests Route::url()
+	 *
+	 * Checks the url composing from specific route via Route::url() shortcut
+	 *
+	 * @test
+	 * @dataProvider provider_composing_url_from_route
+	 * @param string $expected
+	 * @param array $params
+	 * @param boolean $protocol
+	 */
+	function test_composing_url_from_route($expected, $params = NULL, $protocol = NULL)
+	{
+	  $this->assertSame($expected, Route::url('foobar', $params, $protocol));
 	}
 }
