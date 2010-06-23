@@ -840,4 +840,40 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 	{
 		return;
 	}
+
+	public function provider_errors()
+	{
+		// [data, rules, expected], ...
+		return array(
+			array(
+				array('username' => 'frank'),
+				array('username' => 'not_empty'),
+				array(),
+			),
+			array(
+				array('username' => ''),
+				array('username' => 'not_empty'),
+				array('username must not be empty'),
+			),
+		);
+	}
+
+	/**
+	 * Tests Validate::errors()
+	 *
+	 * @test
+	 * @covers Validate::errors
+	 * @dataProvider provider_errors
+	 * @param string  $url       The url to test
+	 * @param boolean $expected  Is it valid?
+	 */
+	public function test_errors($array, $rules, $expected)
+	{
+		$validate = Validate::factory($array)
+			->rules($rules);
+
+		$validate->check();
+
+		$this->assertSame($expected, $validate->errors('validate', FALSE));
+	}
 }
