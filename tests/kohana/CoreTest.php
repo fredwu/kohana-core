@@ -389,7 +389,11 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 	 */
 	function testModules($source, $expected)
 	{
+		$modules = Kohana::modules();
+
 		$this->assertEquals($expected, Kohana::modules($source));
+
+		Kohana::modules($modules);
 	}
 
 	/**
