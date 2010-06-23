@@ -195,12 +195,10 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
       )
     );
 
-    $this->setEnvironment(array('_SERVER' => array('HTTP_HOST' => 'kohanaframework.org')));
-
 	  return array(
 	   array('/welcome'),
 	   array('/news/view/42', array('controller' => 'news', 'action' => 'view', 'id' => 42)),
-	   array('http://kohanaframework.org/news', array('controller' => 'news'), true)
+	   array('cli://kohanaframework.org/news', array('controller' => 'news'), true)
 	  );
 	}
 
@@ -217,6 +215,7 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
 	 */
 	function test_composing_url_from_route($expected, $params = NULL, $protocol = NULL)
 	{
+	  $this->setEnvironment(array('_SERVER' => array('HTTP_HOST' => 'kohanaframework.org')));
 	  $this->assertSame($expected, Route::url('foobar', $params, $protocol));
 	}
 }
