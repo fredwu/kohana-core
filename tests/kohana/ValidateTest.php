@@ -386,7 +386,7 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 	 */
 	function test_email_domain($email, $correct)
 	{
-		if(substr(PHP_OS, 0, 3) != 'win' OR version_compare(PHP_VERSION, '5.3.0', '>='))
+		if( ! Kohana::$is_windows OR version_compare(PHP_VERSION, '5.3.0', '>='))
 		{
 			$this->assertSame(
 				$correct,
