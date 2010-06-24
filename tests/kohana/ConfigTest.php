@@ -37,7 +37,6 @@ Class Kohana_ConfigTest extends Kohana_Unittest_TestCase
 		try
 		{
 			$foo = $config->load('foo');
-			echo Kohana::debug($config);
 		}
 		catch (Exception $e)
 		{
