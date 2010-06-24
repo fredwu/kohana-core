@@ -1,4 +1,4 @@
-<?php
+<?php defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Unit tests for CLI
@@ -7,7 +7,6 @@
  *
  * @group kohana
  * @group kohana.cli
- * @group testdox
  *
  * @see CLI
  * @package    Unittest
