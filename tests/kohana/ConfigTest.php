@@ -1,4 +1,4 @@
-<?php
+<?php defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests the Config lib that's shipped with kohana
@@ -37,7 +37,6 @@ Class Kohana_ConfigTest extends Kohana_Unittest_TestCase
 		try
 		{
 			$foo = $config->load('foo');
-			echo Kohana::debug($config);
 		}
 		catch (Exception $e)
 		{

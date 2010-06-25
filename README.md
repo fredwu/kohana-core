@@ -13,8 +13,17 @@ Guidelines for writing unit tests
 How to use the tests
 ---
 
- * Make sure you have the [unittest](http://github.com/kohana/unittest) module, and put it one level up from this directory, and name it unittest (or you can modify the test_bootstrap.php file to point to it).
+1. Make sure that your `test_bootstrap.php` file is correct.  
+   You should make sure you have the [unittest](http://github.com/kohana/unittest) module - put it one level up in the modules directory and name it unittest (or you can modify `test_bootstrap.php` to alter its location).
 
+2. cd into this folder (i.e. system)
+
+3. Run all the kohana tests by executing `phpunit` without any arguments. 
+   
+   If everything goes ok phpunit should print a series of dots (each dot represents a test that's passed) followed by something along the lines of `OK (520 tests, 1939 assertions)`
+
+4. If you want to view code coverage then open cache/coverage/index.html in your browser
+   
 Known failing tests
 ---
 
