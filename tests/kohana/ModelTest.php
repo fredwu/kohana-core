@@ -1,4 +1,4 @@
-<?php
+<?php defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * This test only really exists for code coverage. No tests really apply to base model.

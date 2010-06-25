@@ -1,10 +1,10 @@
-<?php
+<?php defined('SYSPATH') OR die('Kohana bootstrap needs to be included before tests run');
 
 /**
  * Tests Kohana Core
  *
  * @group kohana
- * @group kohana.url
+ * @group kohana.core
  *
  * @package    Unittest
  * @author     Kohana Team
