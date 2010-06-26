@@ -768,6 +768,7 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 			array('http://ww£.gooogle.com', FALSE),
 			array('http://127.0.0.1', TRUE),
 			array('http://127.0.0.1.1', FALSE),
+			array('http://127000001.1', FALSE),
 			array("http://finalnewline.com\n", FALSE),
 		);
 	}
