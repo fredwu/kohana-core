@@ -169,7 +169,17 @@ Class Kohana_ArrTest extends Kohana_Unittest_TestCase
 				array('name' => 'john', 'children' => array('fred', 'paul', 'sally', 'jane')),
 				array('name' => 'mary', 'children' => array('jane')),
 			),
-		);	
+			array(
+				array('digits' => array(0, 1, 2, 3)),
+				array('digits' => array(0, 1)),
+				array('digits' => array(2, 3)),
+			),
+			array(
+				array(0, 1, 2, 3),
+				array(0, 1),
+				array(2, 3),
+			),
+		);
 	}
 
 	/**
@@ -241,7 +251,7 @@ Class Kohana_ArrTest extends Kohana_Unittest_TestCase
 
 	/**
 	 * Provides test data for test_range()
-	 * 
+	 *
 	 * @return array
 	 */
 	function provider_range()
@@ -252,7 +262,7 @@ Class Kohana_ArrTest extends Kohana_Unittest_TestCase
 			array(25, 10),
 		);
 	}
-	
+
 	/**
 	 * Tests Arr::range()
 	 *
@@ -338,7 +348,7 @@ Class Kohana_ArrTest extends Kohana_Unittest_TestCase
 	function test_overwrite($expected, $arr1, $arr2, $arr3 = array(), $arr4 = array())
 	{
 		$this->assertSame(
-			$expected, 
+			$expected,
 			Arr::overwrite($arr1, $arr2, $arr3, $arr4)
 		);
 	}
