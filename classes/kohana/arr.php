@@ -288,6 +288,9 @@ class Kohana_Arr {
 			// Get the next array
 			$arr = func_get_arg($i);
 
+			// Is the array associative?
+			$assoc = Arr::is_assoc($arr);
+
 			foreach ($arr as $key => $val)
 			{
 				if (isset($result[$key]))
@@ -310,8 +313,16 @@ class Kohana_Arr {
 					}
 					else
 					{
-						// Associative arrays are replaced
-						$result[$key] = $val;
+						if ($assoc)
+						{
+							// Associative values are replaced
+							$result[$key] = $val;
+						}
+						elseif ( ! in_array($val, $result, TRUE))
+						{
+							// Indexed values are added only if they do not yet exist
+							$result[] = $val;
+						}
 					}
 				}
 				else

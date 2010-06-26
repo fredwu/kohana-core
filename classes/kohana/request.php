@@ -228,6 +228,9 @@ class Kohana_Request {
 						{
 							// REQUEST_URI includes the query string, remove it
 							$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+							// Decode the request URI
+							$uri = rawurldecode($uri);
 						}
 						elseif (isset($_SERVER['PHP_SELF']))
 						{
@@ -239,8 +242,8 @@ class Kohana_Request {
 						}
 						else
 						{
-							// If you ever see this error, please report an issue at and include a dump of $_SERVER
-							// http://dev.kohanaphp.com/projects/kohana3/issues
+							// If you ever see this error, please report an issue at http://dev.kohanaphp.com/projects/kohana3/issues
+							// along with any relevant information about your web server setup. Thanks!
 							throw new Kohana_Exception('Unable to detect the URI using PATH_INFO, REQUEST_URI, or PHP_SELF');
 						}
 
