@@ -50,8 +50,16 @@ class Kohana_FeedTest extends Kohana_Unittest_TestCase
 		return array(
 			// $source, $expected
 			array(array('pubDate' => 123), array('foo' => array('foo' => 'bar', 'pubDate' => 123, 'link' => 'foo')), array('_SERVER' => array('HTTP_HOST' => 'localhost')+$_SERVER),
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".
-				'<rss version="2.0"><channel><pubDate>'.date('r', 123).'</pubDate><title>Generated Feed</title><link>http://localhost/</link><generator>KohanaPHP</generator><item><foo>bar</foo><pubDate>Wed, 31 Dec 1969 18:02:03 -0600</pubDate><link>http://localhost/foo</link></item></channel></rss>'."\n"
+				array(
+					'tag' => 'channel',
+					'descendant' => array(
+						'tag' => 'item',
+						'child' => array(
+							'tag' => 'foo',
+							'content' => 'bar'
+						)
+					)
+				)
 			),
 		);
 	}
@@ -65,12 +73,12 @@ class Kohana_FeedTest extends Kohana_Unittest_TestCase
 	 * 
 	 * @param string  $info     info to pass
 	 * @param integer $items    items to add
-	 * @param integer $expected output
+	 * @param integer $matcher  output
 	 */
-	function test_create($info, $items, $enviroment, $expected)
+	function test_create($info, $items, $enviroment, $matcher)
 	{
 		$this->setEnvironment($enviroment);
 
-		$this->assertEquals($expected, feed::create($info, $items));
+		$this->assertTag($matcher, feed::create($info, $items), '', FALSE);
 	}
 }
