@@ -119,6 +119,12 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
 		$this->assertSame(2, count($matches));
 		$this->assertSame('welcome', $matches['controller']);
 		$this->assertSame('index', $matches['action']);
+		$this->assertSame('unit/test/1', $route->uri(array(
+			'controller' => 'unit',
+			'action' => 'test',
+			'id' => '1'
+		)));
+		$this->assertSame('welcome/index', $route->uri());
 	}
 
 	/**
