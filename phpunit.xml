@@ -12,7 +12,7 @@
 	</logging>
 	<testsuites>
 		<testsuite name="Kohana Tests">
-			<file>tests.php</file>
+			<directory suffix=".php">./tests</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
