@@ -756,21 +756,39 @@ Class Kohana_ValidateTest extends Kohana_Unittest_TestCase
 	 */
 	public function provider_url()
 	{
-		return array(
+		$data = array(
 			array('http://google.com', TRUE),
 			array('http://google.com/', TRUE),
+			array('http://google.com/?q=abc', TRUE),
+			array('http://google.com/#hash', TRUE),
 			array('http://localhost', TRUE),
 			array('http://hello-world.pl', TRUE),
-			array('http://hello-.pl', FALSE),
+			array('http://hello--world.pl', TRUE),
+			array('http://h.e.l.l.0.pl', TRUE),
+			array('http://server.tld/get/info', TRUE),
+			array('http://127.0.0.1', TRUE),
+			array('http://127.0.0.1:80', TRUE),
+			array('http://user@127.0.0.1', TRUE),
+			array('http://user:pass@127.0.0.1', TRUE),
 			array('ftp://my.server.com', TRUE),
 			array('rss+xml://rss.example.com', TRUE),
-			array('http://server.tld/get/info', TRUE),
-			array('http://ww£.gooogle.com', FALSE),
-			array('http://127.0.0.1', TRUE),
+
+			array('http://google.2com', FALSE),
+			array('http://google.com?q=abc', FALSE),
+			array('http://google.com#hash', FALSE),
+			array('http://hello-.pl', FALSE),
+			array('http://hel.-lo.world.pl', FALSE),
+			array('http://ww£.google.com', FALSE),
+			array('http://127.0.0.1234', FALSE),
 			array('http://127.0.0.1.1', FALSE),
-			array('http://127000001.1', FALSE),
+			array('http://user:@127.0.0.1', FALSE),
 			array("http://finalnewline.com\n", FALSE),
 		);
+
+		$data[] = array('http://'.str_repeat('123456789.', 25).'com/', TRUE); // 253 chars
+		$data[] = array('http://'.str_repeat('123456789.', 25).'info/', FALSE); // 254 chars
+
+		return $data;
 	}
 
 	/**
