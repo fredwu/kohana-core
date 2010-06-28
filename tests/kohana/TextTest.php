@@ -138,17 +138,16 @@ Class Kohana_TextTest extends Kohana_Unittest_TestCase
 	 * Test Text::alternate()
 	 *
 	 * @test
-	 * @group testdox
 	 */
 	function test_alternate_alternates_between_parameters()
 	{
-		$values = array('good', 'bad', 'ugly');
+		list($val_a, $val_b, $val_c) = array('good', 'bad', 'ugly');
 
-		$this->assertSame('good', call_user_func_array(array('Text', 'alternate'), $values));
-		$this->assertSame('bad',  call_user_func_array(array('Text', 'alternate'), $values));
-		$this->assertSame('ugly', call_user_func_array(array('Text', 'alternate'), $values));
+		$this->assertSame('good', Text::alternate($val_a, $val_b, $val_c));
+		$this->assertSame('bad',  Text::alternate($val_a, $val_b, $val_c));
+		$this->assertSame('ugly', Text::alternate($val_a, $val_b, $val_c));
 		
-		$this->assertSame('good', call_user_func_array(array('Text', 'alternate'), $values));
+		$this->assertSame('good', Text::alternate($val_a, $val_b, $val_c));
 	}
 
 	/**
@@ -156,17 +155,16 @@ Class Kohana_TextTest extends Kohana_Unittest_TestCase
 	 *
 	 * @test
 	 * @covers Text::alternate
-	 * @group testdox
 	 */
 	function test_alternate_resets_when_called_with_no_params_and_returns_empty_string()
 	{
-		$values = array('yes', 'no', 'maybe');
+		list($val_a, $val_b, $val_c) = array('yes', 'no', 'maybe');
 		
-		$this->assertSame('yes', call_user_func_array(array('Text', 'alternate'), $values));
+		$this->assertSame('yes', Text::alternate($val_a, $val_b, $val_c));
 		
 		$this->assertSame('', Text::alternate());	
 
-		$this->assertSame('yes', call_user_func_array(array('Text', 'alternate'), $values));
+		$this->assertSame('yes', Text::alternate($val_a, $val_b, $val_c));
 	}
 
 	/**
