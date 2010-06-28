@@ -75,10 +75,12 @@ class Kohana_RequestTest extends Kohana_Unittest_TestCase
 	 */
 	function testInstance($route, $is_cli, $server, $status, $response)
 	{
-		$old_server = $_SERVER;
-		$_SERVER = $server+array('argc' => $old_server['argc']);
-		Kohana::$is_cli = $is_cli;
-		Request::$instance = NULL;
+		$this->setEnvironment(array(
+			'_SERVER'            => $server+array('argc' => $_SERVER['argc']),
+			'Kohana::$is_cli'    => $is_cli,
+			'Request::$instance' => NULL
+		));
+	
 		$request = Request::instance($route);
 
 		$this->assertEquals($status, $request->status);
@@ -91,9 +93,6 @@ class Kohana_RequestTest extends Kohana_Unittest_TestCase
 			$this->assertEquals($server['HTTP_REFERER'], Request::$referrer);
 			$this->assertEquals($server['HTTP_USER_AGENT'], Request::$user_agent);
 		}
-		Request::$instance = NULL;
-		Kohana::$is_cli = TRUE;
-		$_SERVER = $old_server;
 	}
 
 	/**
