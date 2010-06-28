@@ -110,6 +110,7 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 		$this->assertSame($result, Kohana::list_files($folder));
 	}
 
+	
 	/**
 	 * Tests Kohana::init()
 	 * @covers Kohana::init
@@ -117,9 +118,11 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 	 *
 	 * @test
 	 */
+	/*
 	function testinit()
 	{
 		$original_modules = Kohana::modules();
+
 		#de-init first
 		Kohana::deinit();
 
@@ -139,7 +142,7 @@ class Kohana_CoreTest extends Kohana_Unittest_TestCase
 
 		$this->assertSame(2, count(spl_autoload_functions()));
 		//$this->assertSame(array(APPPATH, SYSPATH)+array_values($original_modules), Kohana::include_paths());
-	}
+	}*/
 
 	/**
 	 * Tests Kohana::globals()
