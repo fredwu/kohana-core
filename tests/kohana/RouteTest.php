@@ -198,7 +198,7 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
 		return array(
 			array('/welcome'),
 			array('/news/view/42', array('controller' => 'news', 'action' => 'view', 'id' => 42)),
-			array('cli://kohanaframework.org/news', array('controller' => 'news'), true)
+			array('http://kohanaframework.org/news', array('controller' => 'news'), true)
 		);
 	}
 
@@ -221,7 +221,13 @@ class Kohana_RouteTest extends Kohana_Unittest_TestCase
 			)
 		);
 
-		$this->setEnvironment(array('_SERVER' => array('HTTP_HOST' => 'kohanaframework.org')));
+		$this->setEnvironment(array(
+			'_SERVER' => array('HTTP_HOST' => 'kohanaframework.org'),
+			'Kohana::$base_url' => '/',
+			'Request::$protocol' => 'http',
+			'Kohana::$index_file' => '',
+		));
+
 		$this->assertSame($expected, Route::url('foobar', $params, $protocol));
 	}
 }
